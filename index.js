@@ -1,11 +1,13 @@
-  var inquirer = require("inquirer");
-  var fs = require("fs");
-  var axios = require("axios");
+  const inquirer = require("inquirer");
+  const fs = require("fs");
+  const axios = require("axios");
+  const util = require("util");
+
+  const writeFileAsync = util.promisify(fs.writeFile);
 
 
-
-  const userResponse = await inquirer
-      .prompt([{
+  function promptUser() {
+      return inquirer.prompt([{
               type: "input",
               message: "What's your Github username?",
               name: "username"
@@ -48,6 +50,7 @@
 
 
       ])
+  }
 
   let userName = userResponse.username;
   console.log(`Username: ${userName}`)
@@ -63,3 +66,21 @@
   const email = gitData.email;
   console.log(`Name: ${name}`);
   console.log(`url: ${url}`);
+
+  async function init() {
+      console.log("hi")
+      try {
+          const answers = await promptUser();
+
+          const readme = generateREADME(answers);
+
+          await writeFileAsync("readme.md", md);
+
+          console.log("Successfully wrote to readme.md");
+      } catch (err) {
+          console.log(err);
+      }
+  }
+
+
+  init();
