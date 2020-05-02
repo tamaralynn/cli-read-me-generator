@@ -52,35 +52,72 @@
       ])
   }
 
-  let userName = userResponse.username;
-  console.log(`Username: ${userName}`)
+  function generateREADME(userResponse) {
+      let userName = userResponse.username;
+      console.log(`Username: ${userName}`)
 
-  const apiURL = `https://api.github.com/users/${userName}`
+      const apiURL = `https://api.github.com/users/${userName}`
 
-  let result = axios.get(apiURL)
-  const gitData = result.data;
+      let result = axios.get(apiURL)
+      const gitData = result;
+      console.log(gitData)
 
-  const name = gitData.name;
-  const url = gitData.url;
-  const img = gitData.avatar_url;
-  const email = gitData.email;
-  console.log(`Name: ${name}`);
-  console.log(`url: ${url}`);
+      //const name = gitData.name;
+      const url = gitData.html_url;
+      const img = gitData.avatar_url;
+      const email = gitData.email;
+      //console.log(`Name: ${name}`);
+      console.log(`url: ${url}`);
+
+      fs.writeFile("README.md",
+          `![badge](https://img.shields.io/badge/<hello>-<${userName}>-<ff69b4>)
+          
+  # ${userResponse.projectTitle}
+  ${userResponse.projectDescription}
+  * [Installation](#Installation)
+  * [Usage](#Usage)
+  * [Credits](#Credits)
+  * [License](#License)
+  * [Tests](#Tests)
+  ## Installation
+  ${userResponse.installation}
+  ## Usage
+  ${userResponse.usage}
+  ## Credits
+  ${userResponse.credits}
+  ## License 
+  ${userResponse.license}
+  ## Tests
+  ${userResponse.tests}
+  ## Questions 
+  ![GitHub Logo](${img})
+  Email: [${email}](${email})
+  `,
+          function(err) {
+
+              if (err) {
+                  return console.log(err);
+              }
+          });
+
+  }
 
   async function init() {
       console.log("hi")
       try {
-          const answers = await promptUser();
+          const userResponse = await promptUser();
 
-          const readme = generateREADME(answers);
+          const readme = generateREADME(userResponse);
 
-          await writeFileAsync("readme.md", md);
+          await writeFileAsync("readme.md", readme);
 
           console.log("Successfully wrote to readme.md");
       } catch (err) {
           console.log(err);
       }
   }
+
+
 
 
   init();
