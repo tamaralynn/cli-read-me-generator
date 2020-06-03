@@ -1,13 +1,14 @@
+require("dotenv").config();
 const axios = require("axios");
-const process = require("dotenv");
+const token = process.env.GITHUB_TOKEN;
 
 
 const api = {
   getUser(username) {
-    let token = process.env.GITHUB_TOKEN; 
-    let apiURL = `https://api.github.com/users/${username}`;
+    
+    let queryURL = `https://api.github.com/users/${username}`;
 
-        return axios.get(apiURL, {
+        return axios.get(queryURL, {
             headers:{
                 "Authorization": `token ${token}`
             }
