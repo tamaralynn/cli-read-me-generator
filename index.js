@@ -1,8 +1,7 @@
 const inquirer = require("inquirer");
-const fs = require("fs");
 const api = require("./api");
 const util = require("util");
-
+const generateREADME = require("./generateREADME")
 const writeFileAsync = util.promisify(fs.writeFile);
 
 
@@ -57,43 +56,6 @@ function promptUser() {
     ])
 }
 
-function generateREADME(userResponse) {
-    const username = userResponse.username;
-    const email = userResponse.username;
-    console.log(`Username: ${username}`)
-
-    fs.writeFile("README.md",
-        `![badge](https://img.shields.io/badge/<hello>-<${username}>-<ff69b4>)
-        
-# ${userResponse.projectTitle}
-${userResponse.projectDescription}
-* [Installation](#Installation)
-* [Usage](#Usage)
-* [Credits](#Credits)
-* [License](#License)
-* [Tests](#Tests)
-## Installation
-${userResponse.installation}
-## Usage
-${userResponse.usage}
-## Credits
-${userResponse.credits}
-## License 
-${userResponse.license}
-## Tests
-${userResponse.tests}
-## Questions 
-![GitHub Logo](${img})
-Email: [${email}](${email})
-`,
-        function(err) {
-
-            if (err) {
-                return console.log(err);
-            }
-        });
-
-}
 
 async function init() {
     console.log("hi")
@@ -103,7 +65,7 @@ async function init() {
         userResponse.avatar_url = gitResponse.avatar_url;
         
         
-        const readme = generateREADME(userResponse);
+        const readme = generateREADME(userResponse, gitResponse);
 
         await writeFileAsync("newreadme.md", readme);
 
